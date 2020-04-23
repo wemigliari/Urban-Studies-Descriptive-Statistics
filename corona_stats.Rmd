@@ -1,0 +1,214 @@
+---
+title: "Coronavirus Outbreak Migliari, W. (2020)."
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(plotly)
+library(dplyr)
+library(readxl)
+library(curl)
+library(httr)
+
+corona <-read_excel("/users/wemigliari/Documents/R/tabelas/corona_outbreak.xlsx", sheet = "Sheet1")
+
+```
+
+Column {.sidebar}
+=====================================
+
+### Synopsis
+
+The present document sums up the data on coronavirus outbreak we have been collecting latetly from the website [Worldometer](https://www.worldometers.info/coronavirus/). The figures cover all the cases in Europe and are divided into two groups. One of them indicates the number of deaths. The other discloses the digits of total people infected in the region. Both influenced by the massive effect of the virus spread in urban context.
+
+COVID-19, Coronavirus Pandemic. (2020). Retrieved from https://www.worldometers.info/
+
+
+Infected & Fatal Cases
+=====================================
+
+Row {data-height=500}
+-------------------------------------
+
+### Figure A
+
+```{r, echo = FALSE}
+plot_ly(corona, x = corona$Countries...2, y = corona$`Infected March2`, type = 'bar', name = 'Infected 2nd Week of March (2020)', marker = list(color = '#ffd700'))%>%
+add_trace(y = corona$`Infected March3`, name = 'Infected 3rd Week of March (2020)', marker = list(color = '#daa520'))%>%
+add_trace(y = corona$`Infected April1`, name = 'Infected 1st Week of April (2020)', marker = list(color = '#808080'))%>%
+  layout(title = 'Infected People by COVID-19 in Europe (2020)',
+         xaxis = list(
+           title = "",
+           tickfont = list(
+             size = 14,
+             color = '#808080')),
+         yaxis = list(
+           title = 'Thousands',
+           titlefont = list(
+             size = 16,
+             color = '#daa520'),
+           tickfont = list(
+             size = 14,
+             color = '#808080')),
+         legend = list(x = 0, y = 1, bgcolor = c('#ffd700', '#daa520', '#808080'), bordercolor = c('#ffd700', '#daa520', '#808080')),
+         barmode = 'group', bargap = 0.15)
+```
+
+Row {data-height=500}
+-------------------------------------
+
+### Figure B
+
+```{r, echo = FALSE}
+
+plot_ly(corona, x = corona$Countries...4, y = corona$`Death March2`, type = 'bar', name = 'Fatal Cases 2nd Week of March (2020)', marker = list(color = '#ffd700'))%>%
+add_trace(y = corona$`Death March3`, name = 'Fatal Cases 3rd Week of March (2020)', marker = list(color = '#daa520'))%>%
+add_trace(y = corona$`Death March3`, name = 'Fatal Cases 1st Week of April (2020)', marker = list(color = '#808080'))%>% 
+  layout(title = 'Fatal Cases by COVID-19 in Europe (2020)',
+         xaxis = list(
+           title = "",
+           tickfont = list(
+             size = 14,
+             color = '#808080')),
+         yaxis = list(
+           title = 'Thousands',
+           titlefont = list(
+             size = 16,
+             color = '#daa520'),
+            tickfont = list(
+             size = 14,
+             color = '#808080')),
+         legend = list(x = 0, y = 1, bgcolor = c('#ffd700', '#daa520', '#808080'), bordercolor = c('#ffd700', '#daa520', '#808080')),
+         barmode = 'group', bargap = 0.15)
+
+```
+
+March 2nd Week
+=====================================
+
+Row {data-height=250}
+-------------------------------------
+
+### Normal Distribution and Densities
+
+Infected People in Europe for Urban Areas (2nd Week of March, 2020)
+
+```{r, echo = FALSE}
+set.seed(1000000)
+
+
+hn1 <- rnorm(sum(corona$`Infected March2`))
+fithn1 <- density(hn1)
+
+plot_ly(x = hn1, type = "histogram", name = "Infected", color = I("#ffd700"))%>% 
+  add_trace(x = fithn1$x, y = fithn1$y, type = "scatter", mode = "lines", fill = "tozeroy", color = I("#ffd700"), yaxis = "y2", name = "Density")%>%
+  layout(yaxis2 = list(overlaying = "y", side = "right"))
+```
+
+### Normal Distribution and Densities
+
+Fatal Cases in Europe for Urban Areas (2nd Week of March, 2020)
+
+```{r, echo = FALSE}
+set.seed(1000000)
+
+
+hn11 <- rnorm(sum(corona$`Death March2`))
+fithn11 <- density(hn11)
+
+plot_ly(x = hn11, type = "histogram", name = "Fatal Cases", color = I("#ffd700"))%>% 
+  add_trace(x = fithn11$x, y = fithn11$y, type = "scatter", mode = "lines", fill = "tozeroy", color = I("#ffd700"), yaxis = "y2", name = "Density")%>%
+  layout(yaxis2 = list(overlaying = "y", side = "right"))
+```
+
+Row
+-------------------------------------
+
+### Normal Distribution and Densities
+
+Infected People in Europe for Urban Areas (3rd Week of March, 2020)
+
+```{r, echo = FALSE}
+
+hn2 <- rnorm(sum(corona$`Infected March3`))
+fithn2 <- density(hn2)
+
+plot_ly(x = hn2, type = "histogram", name = "Infected", color = I("#daa520"))%>% 
+  add_trace(x = fithn2$x, y = fithn2$y, type = "scatter", mode = "lines", fill = "tozeroy", color = I("#daa520"), yaxis = "y2", name = "Density")%>%
+  layout(yaxis2 = list(overlaying = "y", side = "right"))
+
+```
+
+### Normal Distribution and Densities
+
+Fatal Cases in Europe for Urban Areas (3rd Week of March, 2020)
+
+```{r, echo = FALSE}
+
+hn22 <- rnorm(sum(corona$`Death March3`))
+fithn22 <- density(hn22)
+
+plot_ly(x = hn22, type = "histogram", name = "Fatal Cases", color = I("#daa520"))%>% 
+  add_trace(x = fithn22$x, y = fithn22$y, type = "scatter", mode = "lines", fill = "tozeroy", color = I("#daa520"), yaxis = "y2", name = "Density")%>%
+  layout(yaxis2 = list(overlaying = "y", side = "right"))
+
+```
+
+April 1st Week {data-height=250}
+=====================================
+
+Row
+-------------------------------------
+
+### Normal Distribution and Densities
+
+Infected People in Europe for Urban Areas (1st Week of April, 2020)
+
+```{r, echo = FALSE}
+hn3 <- rnorm(sum(corona$`Infected April1`))
+fithn3 <- density(hn3)
+
+plot_ly(x = hn3, type = "histogram", name = "Infected", color = I("#808080"))%>% 
+  add_trace(x = fithn3$x, y = fithn3$y, type = "scatter", mode = "lines", fill = "tozeroy", color = I("#808080"), yaxis = "y2", name = "Density")%>%
+  layout(yaxis2 = list(overlaying = "y", side = "right"))
+
+```
+
+### Normal Distribution and Densities
+
+Fatal Cases in Europe for Urban Areas (1st Week of April, 2020)
+
+```{r, echo = FALSE}
+hn33 <- rnorm(sum(corona$`Death April1`))
+fithn33 <- density(hn33)
+
+plot_ly(x = hn33, type = "histogram", name = "Fatal Cases", color = I("#808080"))%>% 
+  add_trace(x = fithn33$x, y = fithn33$y, type = "scatter", mode = "lines", fill = "tozeroy", color = I("#808080"), yaxis = "y2", name = "Density")%>%
+  layout(yaxis2 = list(overlaying = "y", side = "right"))
+
+```
+
+Row
+-------------------------------------
+
+### Normal Distribution and Densities
+
+```{r, echo = FALSE}
+
+print("Waiting for data")
+
+```
+
+
+### Normal Distribution and Densities
+
+```{r, echo = FALSE}
+
+print("Waiting for data")
+
+```
+
