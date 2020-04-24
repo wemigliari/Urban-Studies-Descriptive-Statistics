@@ -1,0 +1,72 @@
+---
+title: "Metropolitan Studies and Statistics on Coronavirus"
+output: github_document
+always_allow_html: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(readxl)
+library(rgdal)
+library(plotly)
+library(ggmap)
+library(rgeos)
+library(maptools)
+library(raster)
+library(cartography)
+library(dplyr)
+library(knitr)
+library(kableExtra)
+library(latticeExtra)
+
+corona <- read_excel("/Users/wemigliari/Documents/R/tabelas/corona_outbreak.xlsx")
+corona_tab <- as.data.frame(corona)
+
+metro <- read_excel("/Users/wemigliari/Documents/R/tabelas/metro.xlsx")
+total <- as.numeric(corona$`Infected March2`)
+death <- corona$`Death March2`
+metro20 <- metro$pop2020
+metro30 <- metro$pop2030
+
+cortotal <- c(corona$`Infected March2`)
+cordeath <- c(corona$`Death March2`)
+corname <- c(corona$Countries...2)
+
+```
+
+## GitHub Documents
+
+This is an R Markdown format used for publishing markdown documents to GitHub. When you click the **Knit** button all R code chunks are run and a markdown file (.md) suitable for publishing to GitHub is generated.
+
+## Including Code
+
+You can include R code in the document as follows:
+
+```{r corona}
+summary(corona)
+```
+
+```{r metro}
+summary(metro)
+
+xyplot(metro20 ~ metro30, col = "purple", xlab = "Estimation for Population in 2030 (in million)", ylab = "Population in 2020 (in Million)")
+```
+## Including Plots
+
+You can also embed plots, for example:
+
+
+```{r }
+plot(cortotal, cordeath, col = "black",pch = 15, xlim = c(0,200), ylim = c(0,6000), xlab = "Fatal Cases", ylab = "Number of Infected")
+points(corona$`Infected March3` ~ corona$`Death March3`, pch = 19, col = "gray")
+points(corona$`Infected April1` ~ corona$`Death April1`, pch = 17, col = "lightblue")
+legend(170, 2500, legend = c("Correlation 1", "Correlation 2", "Correlation 3"), col = c("black", "gray", "lightblue"), bty = "n", cex = 0.5, pch = c(15, 19, 17), box.lty = 0)
+
+```
+
+```{r}
+kable(corona)%>%
+   kable_styling(bootstrap_options = "striped", full_width = F)
+
+```
